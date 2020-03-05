@@ -1,4 +1,4 @@
-name: PyPi Publishing
+name: Publish Plugin Runtime
 
 on:
   push:
