@@ -166,20 +166,12 @@ class Endpoints:
                   description: InsightConnect Plugin Information to be returned
                   schema: PluginInfoSchema
             """
-            plugin_spec = Endpoints.load_file_json_format("/python/src/plugin.spec.yaml")
-            response = {
-                "name": plugin_spec.get('name'),
-                "description": plugin_spec.get('description'),
-                "version": plugin_spec.get('version'),
-                "vendor": plugin_spec.get('vendor'),
-                "plugin_spec_version": plugin_spec.get('plugin_spec_version'),
-                "title": plugin_spec.get('title'),
-                "support": plugin_spec.get('support'),
-                "tags": plugin_spec.get('tags'),
-                "enable_cache": plugin_spec.get('enable_cache'),
-                "number_of_workers": self.workers,
-                "threads": self.threads
-            }
+            plugin_spec_json = Endpoints.load_file_json_format("/python/src/plugin.spec.yaml")
+            plugin_info_fields = ["name", "description", "version", "vendor", "plugin_spec_version", "title",
+                                  "support", "tags", "enable_cache"]
+            response = Endpoints.get_plugin_info(plugin_spec_json, plugin_info_fields)
+            # Add workers and threads
+            response.update({"number_of_workers": self.workers, "threads": self.threads})
             return jsonify(PluginInfoSchema().dump(response))
 
         @v1.route("/actions")
@@ -415,6 +407,13 @@ class Endpoints:
             msg = f"Action name ({name_in_input_msg}) in input body is not matching with name ({name}) in route"
             resp = make_response(jsonify({"error": msg}), 400)
             abort(resp)
+
+    @staticmethod
+    def get_plugin_info(plugin_spec_json, fields):
+        plugin_info = {}
+        for field in fields:
+            plugin_info.update({field: plugin_spec_json.get(field)})
+        return plugin_info
 
     def run_action_trigger(self, input_message, test=False):
         status_code = 200
