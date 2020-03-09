@@ -21,7 +21,8 @@ setup(name='komand',
           'gunicorn==20.0.4',
           'marshmallow==3.4.0',
           'apispec==3.2.0',
-          'apispec-webframeworks==0.5.2'
+          'apispec-webframeworks==0.5.2',
+          'psutil==5.7.0'
       ],
       tests_require=[
           'pytest',
