@@ -52,7 +52,8 @@ class Endpoints:
             """
             input_message = request.get_json(force=True)
             self.logger.debug('Request input: %s', input_message)
-            self.validate_action_trigger(input_message, name, 'action')
+            Endpoints.validate_action_trigger_empty_input(input_message)
+            Endpoints.validate_action_trigger_name(input_message, name, 'action')
             output = self.run_action_trigger(input_message)
             return output
 
@@ -85,7 +86,8 @@ class Endpoints:
             """
             input_message = request.get_json(force=True)
             self.logger.debug('Request input: %s', input_message)
-            self.validate_action_trigger(input_message, name, 'trigger')
+            Endpoints.validate_action_trigger_empty_input(input_message)
+            Endpoints.validate_action_trigger_name(input_message, name, 'trigger')
             output = self.run_action_trigger(input_message, True)
             return output
 
@@ -118,7 +120,8 @@ class Endpoints:
             """
             input_message = request.get_json(force=True)
             self.logger.debug('Request input: %s', input_message)
-            self.validate_action_trigger(input_message, name, 'action')
+            Endpoints.validate_action_trigger_empty_input(input_message)
+            Endpoints.validate_action_trigger_name(input_message, name, 'action')
             output = self.run_action_trigger(input_message, True)
             return output
 
@@ -400,11 +403,13 @@ class Endpoints:
             return yaml.safe_load(p_spec.read())
 
     @staticmethod
-    def validate_action_trigger(input_message, name, p_type):
+    def validate_action_trigger_empty_input(input_message):
         if not input_message:
             resp = make_response(jsonify({"error": "Empty input provided"}), 400)
             abort(resp)
 
+    @staticmethod
+    def validate_action_trigger_name(input_message, name, p_type):
         name_in_input_msg = input_message.get('body', {}).get(p_type, None)
         if name_in_input_msg != name:
             msg = f"Action name ({name_in_input_msg}) in input body is not matching with name ({name}) in route"
