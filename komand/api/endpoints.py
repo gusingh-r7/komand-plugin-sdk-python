@@ -1,5 +1,5 @@
 import json
-import psutil
+import subprocess
 import yaml
 import os
 import signal
@@ -375,8 +375,9 @@ class Endpoints:
 
         :return: integer
         """
-        num_workers = len(
-            list(filter(lambda p: any(vendor in p.name() for vendor in ['komand', 'icon']), psutil.process_iter())))
+        output = subprocess.check_output('ps | grep "icon\\|komand" | grep -v "grep" | wc -l', shell=True)
+        num_workers = int(output.decode())
+
         # num_workers - 1 due to a master process being run as well
         return num_workers - 1
 

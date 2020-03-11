@@ -8,8 +8,6 @@ ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
 		SSL_CERT_DIR=/etc/ssl/certs \
 		REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
-RUN apt-get update && apt-get -y install gcc
-
 ADD ./ /usr/src/komand
 WORKDIR /usr/src/komand
 
