@@ -93,6 +93,7 @@ class PluginServer(gunicorn.app.base.BaseApplication):
         self.spec.path(view=self.app.view_functions["v1.action_details"])
         self.spec.path(view=self.app.view_functions["v1.trigger_details"])
         self.spec.path(view=self.app.view_functions["v1.connection"])
+        self.spec.path(view=self.app.view_functions["v1.connection_test"])
 
     def register_blueprint(self):
         """Register all blueprints"""

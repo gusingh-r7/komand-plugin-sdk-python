@@ -375,6 +375,30 @@ class Endpoints:
             schema = conn.schema
             return jsonify(ConnectionDetailsSchema().dump(schema))
 
+        @v1.route("/connection/test", methods=["POST"])
+        def connection_test():
+            """Run connection test endpoint
+            ---
+            post:
+              summary: Run connection test
+              description: Run InsightConnect plugin connection test
+              responses:
+                200:
+                  description: Connection test output to be returned
+                  schema:
+                    type: object
+                404:
+                  description: Not found
+            """
+            if hasattr(self.plugin.connection, "test"):
+                response = self.plugin.connection.test()
+                if response is None:
+                    return "PASS"
+                else:
+                    return response
+            else:
+                return make_response(jsonify({"error": "Connection test method not found"}), 404)
+
         blueprints = [legacy, v1]
         return blueprints
 
