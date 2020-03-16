@@ -13,4 +13,3 @@ def test_validate_server_spec():
         with open("insightconnect-plugin-swagger.json", "w+") as api_spec:
             api_spec.write(json.dumps(plugin_server.spec.to_dict(), indent=2))
         validate_spec(plugin_server.spec.to_dict())
-
